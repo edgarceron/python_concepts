@@ -1,33 +1,23 @@
+import pytest
 
 
+class Fruit:
+    def __init__(self, name):
+        self.name = name
 
-def hello_decorator(func):
-    def inner1(*args, **kwargs):
-         
-        print("before Execution")
-         
-        # getting the returned value
-        returned_value = func(*args, **kwargs)
-        print("after Execution")
-         
-        # returning the value to the original frame
-        return returned_value
-         
-    return inner1
- 
- 
-# adding decorator to the function
-@hello_decorator
-def sum_two_numbers(a, b):
-    print("Inside the function")
-    return a + b
- 
-a, b = 1, 2
- 
-# getting the value through return of the function
-print("Sum =", sum_two_numbers(a, b))
-# Output
-# before Execution
-# Inside the function
-# after Execution
-# Sum = 3
+    def __eq__(self, other):
+        return self.name == other.name
+
+
+@pytest.fixture
+def my_fruit():
+    return Fruit("apple")
+
+
+@pytest.fixture
+def fruit_basket(my_fruit):
+    return [Fruit("banana"), my_fruit]
+
+
+def test_my_fruit_in_basket(my_fruit, fruit_basket):
+    assert my_fruit in fruit_basket
